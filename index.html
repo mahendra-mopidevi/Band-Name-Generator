@@ -10,17 +10,17 @@
             background-color: #1e1e1e;
             font-family: monospace;
             padding: 20px;
-            color: #00ff00; /* default green */
+            color: #00ff00;
         }
         h1 {
-            color: #ff6347; /* tomato red */
+            color: #ff6347;
         }
         button {
             font-size: 16px;
             padding: 8px 15px;
             margin-top: 10px;
             cursor: pointer;
-            background-color: #008080; /* teal */
+            background-color: #008080;
             color: white;
             border: none;
             border-radius: 5px;
@@ -29,10 +29,10 @@
             margin-top: 20px;
         }
         .prompt {
-            color: #ffd700; /* gold for prompts */
+            color: #ffd700;
         }
         .result {
-            color: #00ffff; /* cyan for result */
+            color: #00ffff;
             font-weight: bold;
         }
         input {
@@ -40,6 +40,7 @@
             padding: 5px;
             border-radius: 3px;
             border: 1px solid #ccc;
+            width: 200px;
         }
     </style>
 </head>
@@ -52,21 +53,29 @@ from js import document
 
 def run_band_name_generator(*args):
     output_div = document.getElementById("output")
-    
-    # Clear previous content
-    output_div.innerHTML = ""
-    
-    # Prompts
-    city = input("What's the name of the city you grew up in?\n")
-    pet = input("What's your pet's name?\n")
-    
-    band_name = city + " " + pet
-    
-    # Show result in colorful div
-    output_div.innerHTML = f"<p class='prompt'>Generating your band name...</p>" \
-                           f"<p class='result'>Your band name could be {band_name}</p>"
+    output_div.innerHTML = ""  # Clear previous content
 
-# Attach function to button click
+    # Create input fields dynamically
+    output_div.innerHTML = """
+        <p class='prompt'>What's the name of the city you grew up in?</p>
+        <input id='cityInput' type='text' placeholder='City Name' /><br>
+        <p class='prompt'>What's your pet's name?</p>
+        <input id='petInput' type='text' placeholder='Pet Name' /><br>
+        <button id='generateBtn'>Generate Band Name</button>
+        <div id='resultDiv'></div>
+    """
+
+    # Function to generate band name after user fills inputs
+    def generate_band_name(*args):
+        city = document.getElementById("cityInput").value
+        pet = document.getElementById("petInput").value
+        band_name = city + " " + pet
+        result_div = document.getElementById("resultDiv")
+        result_div.innerHTML = f"<p class='result'>Your band name could be {band_name}</p>"
+
+    document.getElementById("generateBtn").addEventListener("click", generate_band_name)
+
+# Attach function to main Run button
 document.getElementById("runBtn").addEventListener("click", run_band_name_generator)
     </py-script>
 </body>
