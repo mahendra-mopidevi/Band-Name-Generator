@@ -3,80 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <title>Band Name Generator</title>
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <style>
-        body {
-            background-color: #1e1e1e;
-            font-family: monospace;
-            padding: 20px;
-            color: #00ff00;
-        }
-        h1 {
-            color: #ff6347;
-        }
-        button {
-            font-size: 16px;
-            padding: 8px 15px;
-            margin-top: 10px;
-            cursor: pointer;
-            background-color: #008080;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        #output {
-            margin-top: 20px;
-        }
-        .prompt {
-            color: #ffd700;
-        }
-        .result {
-            color: #00ffff;
-            font-weight: bold;
-        }
-        input {
-            margin: 5px 0;
-            padding: 5px;
-            border-radius: 3px;
-            border: 1px solid #ccc;
-            width: 200px;
-        }
+        body { background-color: #1e1e1e; font-family: monospace; padding: 20px; color: #00ff00; }
+        h1 { color: #ff6347; }
+        button { font-size: 16px; padding: 8px 15px; margin-top: 10px; cursor: pointer; background-color: #008080; color: white; border: none; border-radius: 5px; }
+        #output { margin-top: 20px; }
+        .prompt { color: #ffd700; }
+        .result { color: #00ffff; font-weight: bold; }
+        input { margin: 5px 0; padding: 5px; border-radius: 3px; border: 1px solid #ccc; width: 200px; }
     </style>
 </head>
 <body>
     <h1>Click <button id="runBtn">Run</button> to run the final project you will build.</h1>
     <div id="output"></div>
 
-    <py-script>
-from js import document
+    <script>
+        // JavaScript version of the band name generator
+        let cityName = "";
 
-def run_band_name_generator(*args):
-    output_div = document.getElementById("output")
-    output_div.innerHTML = ""  # Clear previous content
+        function runBandNameGenerator() {
+            const outputDiv = document.getElementById("output");
+            outputDiv.innerHTML = "";
 
-    # Create input fields dynamically
-    output_div.innerHTML = """
-        <p class='prompt'>What's the name of the city you grew up in?</p>
-        <input id='cityInput' type='text' placeholder='City Name' /><br>
-        <p class='prompt'>What's your pet's name?</p>
-        <input id='petInput' type='text' placeholder='Pet Name' /><br>
-        <button id='generateBtn'>Generate Band Name</button>
-        <div id='resultDiv'></div>
-    """
+            outputDiv.innerHTML = `
+                <p class='prompt'>What's the name of the city you grew up in?</p>
+                <input id='cityInput' type='text' placeholder='Enter city name' />
+                <button id='nextBtn'>Next</button>
+                <div id='stepResult'></div>
+            `;
 
-    # Function to generate band name after user fills inputs
-    def generate_band_name(*args):
-        city = document.getElementById("cityInput").value
-        pet = document.getElementById("petInput").value
-        band_name = city + " " + pet
-        result_div = document.getElementById("resultDiv")
-        result_div.innerHTML = f"<p class='result'>Your band name could be {band_name}</p>"
+            function handleNext() {
+                const cityInput = document.getElementById("cityInput");
+                cityName = cityInput.value.trim();
 
-    document.getElementById("generateBtn").addEventListener("click", generate_band_name)
+                if (!cityName) {
+                    document.getElementById("stepResult").innerHTML = "<span style='color:red'>Please enter a city name.</span>";
+                    return;
+                }
 
-# Attach function to main Run button
-document.getElementById("runBtn").addEventListener("click", run_band_name_generator)
-    </py-script>
+                // Show question 1 with answer, then add question 2
+                outputDiv.innerHTML = `
+                    <p class='prompt'>What's the name of the city you grew up in?</p>
+                    <p class='result'>${cityName}</p>
+                    <br>
+                    <p class='prompt'>What's your pet's name?</p>
+                    <input id='petInput' type='text' placeholder='Enter pet name' />
+                    <button id='showBtn'>Show Band Name</button>
+                    <div id='stepResult2'></div>
+                `;
+
+                function handleShow() {
+                    const petInput = document.getElementById("petInput");
+                    const petName = petInput.value.trim();
+
+                    if (!petName) {
+                        document.getElementById("stepResult2").innerHTML = "<span style='color:red'>Please enter a pet name.</span>";
+                        return;
+                    }
+
+                    const bandName = cityName + " " + petName;
+
+                    // Show all questions, answers, and final result
+                    outputDiv.innerHTML = `
+                        <p class='prompt'>What's the name of the city you grew up in?</p>
+                        <p class='result'>${cityName}</p>
+                        <br>
+                        <p class='prompt'>What's your pet's name?</p>
+                        <p class='result'>${petName}</p>
+                        <br>
+                        <p class='result'>Your band name could be ${bandName}</p>
+                    `;
+                }
+
+                document.getElementById("showBtn").addEventListener("click", handleShow);
+            }
+
+            document.getElementById("nextBtn").addEventListener("click", handleNext);
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("runBtn").addEventListener("click", runBandNameGenerator);
+        });
+    </script>
 </body>
 </html>
